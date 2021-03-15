@@ -7,6 +7,6 @@ CREATE TABLE subscribers (
   email VARCHAR(250) NOT NULL
 );
 
-INSERT INTO subscribers (first_name, last_name) VALUES
-  ('Zsolt', 'Horvath',"fiktivemail@fiktiv.hu"),
-  ('Jakab', 'Gipsz',"fiktivemail@fiktiv.hu");
+INSERT INTO subscribers (first_name, last_name, email) VALUES
+  ('Zsolt', 'Horvath','fiktivemail@fiktiv.hu'),
+  ('Jakab', 'Gipsz','fiktivemail@fiktiv.hu');

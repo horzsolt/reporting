@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface SubscriberRepository extends CrudRepository<SubscriberEntity, String> {
 
-    public List<SubscriberEntity> findAllSubscribers();// why default findAll() returns with an iterable?
+    List<SubscriberEntity> findAll();// why default findAll() returns with an iterable?
 }

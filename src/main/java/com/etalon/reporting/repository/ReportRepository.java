@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@Repository
 public class ReportRepository {
 
     @Autowired

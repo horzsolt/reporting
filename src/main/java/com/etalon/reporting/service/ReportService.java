@@ -16,7 +16,7 @@ public class ReportService {
     private final SubscriberRepository subscriberRepository;
 
     public List<JasperPrint> generateAllSubscriberReports() {
-        return subscriberRepository.findAllSubscribers().stream()
+        return subscriberRepository.findAll().stream()
                 .map(subscriber ->
                         reportRepository.getSubscriberReport(subscriber.getId()))
                 .collect(Collectors.toList());
