@@ -15,7 +15,7 @@ import javax.persistence.Id;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubscriberEntity {
+public class Subscriber {
 
     @Id
     @GeneratedValue(generator = "uuid")
