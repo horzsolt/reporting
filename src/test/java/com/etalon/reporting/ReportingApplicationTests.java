@@ -48,12 +48,8 @@ class ReportingApplicationTests {
 
 		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
-		ResponseEntity<String> response = restTemplate.exchange(
-				createURLWithPort("/subscriberreport/1"),
-				HttpMethod.GET, entity, String.class);
-
 		File file = restTemplate.execute("/subscriberreport/1", HttpMethod.GET, null, clientHttpResponse -> {
-			File ret = File.createTempFile("download", "tmp");
+			File.createTempFile("download", "tmp");
 			StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(ret));
 			return ret;
 		});

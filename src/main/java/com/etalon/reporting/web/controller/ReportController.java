@@ -34,8 +34,7 @@ public class ReportController {
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=subscriberreport.pdf");
 
-        JasperPrint report = reportService.generateSubscriberReport(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Report not found"));
+        JasperPrint report = reportService.generateSubscriberReport(id);
 
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         try {

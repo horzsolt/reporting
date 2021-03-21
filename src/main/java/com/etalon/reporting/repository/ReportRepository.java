@@ -3,10 +3,7 @@ package com.etalon.reporting.repository;
 import com.etalon.reporting.entity.Subscriber;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -24,7 +21,7 @@ public class ReportRepository {
     @Autowired SubscriberRepository subscriberRepository;
 
     @SneakyThrows
-    public JasperPrint getSubscriberReport(String id) {
+    public JasperPrint getSubscriberReport(String email, String name) {
 
         try {
 
@@ -32,13 +29,12 @@ public class ReportRepository {
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
             Map<String, Object> parameters = new HashMap<>();
 
-            Subscriber subscriberEntity =  subscriberRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subscriber not found"));
+            parameters.put("email", email);
+            parameters.put("name", name);
 
-            parameters.put("email", subscriberEntity.getEmail());
-            parameters.put("name", subscriberEntity.getFirstName() + " " + subscriberEntity.getLastName());
-
-            return JasperFillManager.fillReport(jasperReport, parameters);
+            log.debug("parameters:");
+            log.debug(parameters.toString());
+            return JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
 
         } catch (Exception e) {
             log.error("getSubscriberReport failed", e);
