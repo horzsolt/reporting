@@ -30,7 +30,7 @@ public class BaseTest {
             try {
                 document.close();
             } catch (IOException e) {
-                //log.warn("", e);
+                log.warn("", e);
                 /*error: cannot find symbol
                                 log.warn("", e);
                                 ^
