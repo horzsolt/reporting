@@ -1,10 +1,9 @@
 package com.etalon.reporting;
 
-import org.assertj.core.api.Assertions;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.etalon.reporting.web.controller.ReportController;
@@ -13,20 +12,20 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StreamUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
+@Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReportingApplicationTests {
+class ReportingApplicationTests extends BaseTest {
 
-	static final Logger logger = LoggerFactory.getLogger(ReportingApplicationTests.class);
 	@LocalServerPort
 	private int port;
 
@@ -44,21 +43,17 @@ class ReportingApplicationTests {
 	}
 
 	@Test
-	void subscriberReport() {
+	void subscriberReport() throws IOException {
 
 		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
 		File file = restTemplate.execute("/subscriberreport/1", HttpMethod.GET, null, clientHttpResponse -> {
-			File.createTempFile("download", "tmp");
-			StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(ret));
-			return ret;
+			File tempFile = File.createTempFile("download", "tmp");
+			StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(tempFile));
+			return tempFile;
 		});
 
-		Assert.notNull(file, "Report is null");
+		List<Boolean> result = checkStringsInPdfFile(Arrays.asList( new String[] {"fiktivemail@fiktiv.hu", "Zsolt", "Horvath"}), file.getAbsolutePath());
+		Assert.isTrue(checkGreenResult(result), "No full match");
 	}
-
-	private String createURLWithPort(String uri) {
-		return "http://localhost:" + port + uri;
-	}
-
 }
