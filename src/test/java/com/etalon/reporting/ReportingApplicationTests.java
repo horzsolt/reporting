@@ -1,5 +1,7 @@
 package com.etalon.reporting;
 
+import com.etalon.reporting.entity.Subscriber;
+import com.etalon.reporting.repository.SubscriberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +39,11 @@ class ReportingApplicationTests extends BaseTest {
 
 	HttpHeaders headers = new HttpHeaders();
 
+	@Autowired
+	protected ReportingApplicationTests(SubscriberRepository subscriberRepository) {
+		super(subscriberRepository);
+	}
+
 	@Test
 	void contextLoads() {
 		assertThat(controller).isNotNull();
@@ -45,15 +52,16 @@ class ReportingApplicationTests extends BaseTest {
 	@Test
 	void subscriberReport() throws IOException {
 
+		Subscriber sut = getTestSubscriber();
 		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
-		File file = restTemplate.execute("/subscriberreport/1", HttpMethod.GET, null, clientHttpResponse -> {
+		File file = restTemplate.execute("/subscriberreport/" + sut.getId(), HttpMethod.GET, null, clientHttpResponse -> {
 			File tempFile = File.createTempFile("download", "tmp");
 			StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(tempFile));
 			return tempFile;
 		});
 
-		List<Boolean> result = checkStringsInPdfFile(Arrays.asList( new String[] {"fiktivemail@fiktiv.hu", "Zsolt", "Horvath"}), file.getAbsolutePath());
+		List<Boolean> result = checkStringsInPdfFile(Arrays.asList( new String[] {sut.getEmail(), sut.getFirstName(), sut.getLastName()}), file.getAbsolutePath());
 		Assert.isTrue(checkGreenResult(result), "No full match");
 	}
 }
